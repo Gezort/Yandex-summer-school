@@ -29,4 +29,18 @@ proguard/
 .navigation/
 
 # Android Studio captures folder
+#
 captures/
+
+*.iml
+.DS_Store
+Application/.idea
+Application/app/build.gradle
+Application/app/proguard-rules.pro
+Application/build.gradle
+gradle.properties
+gradle/
+gradlew
+gradlew.bat
+settings.gradle
+image*
