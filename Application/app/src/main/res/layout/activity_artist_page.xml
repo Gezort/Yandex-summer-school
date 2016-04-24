@@ -2,22 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/AppTheme.NoActionBar">
 
-    <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/artist_page_toolbar"
-        style="@style/Toolbar">
-
-        <TextView
-            android:id="@+id/toolbar_title"
-            style="@style/ToolbarTitle" />
-    </android.support.v7.widget.Toolbar>
+        style="@style/Toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <ImageView
+        android:id="@+id/artist_big_icon"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.4"
-        android:src="@mipmap/ic_artist" />
+        android:scaleType="fitXY"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,18 +30,32 @@
             style="@style/CardText" />
 
         <TextView
-            android:id="@+id/card_songs"
-            style="@style/CardText" />
+            android:id="@+id/card_tracks"
+            style="@style/CardText"
+            android:layout_marginTop="10dp" />
 
         <TextView
             android:id="@+id/card_biography_title"
-            style="@style/CardText"
-            android:text="@string/biography"
-            android:textSize="28sp" />
+            style="@style/CardTitle"
+            android:layout_marginTop="10dp"
+            android:text="@string/biography" />
 
         <ScrollView
-            android:id="@+id/card_biography"
-            style="@style/CardText" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-15dp"
+            android:layout_marginLeft="-15dp"
+            android:layout_marginRight="-15dp"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/card_biography"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp" />
+        </ScrollView>
     </LinearLayout>
 
 </LinearLayout>

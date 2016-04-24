@@ -7,11 +7,6 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/artist_list_toolbar"
         style="@style/Toolbar">
-
-        <TextView
-            android:id="@+id/toolbar_title"
-            style="@style/ToolbarTitle"
-            android:text="@string/app_name" />
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
@@ -19,5 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/artist_list_toolbar" />
+
+    <FrameLayout
+        android:id="@+id/download_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/shadow"/>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
 </RelativeLayout>

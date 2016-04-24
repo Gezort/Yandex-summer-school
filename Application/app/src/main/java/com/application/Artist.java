@@ -4,18 +4,18 @@ package com.application;
  * Created by miron on 16.04.16.
  */
 public class Artist {
-    int id;
-    String name;
-    String[] genres;
-    int tracks;
-    int albums;
-    String link;
-    String description;
-    Cover cover;
+    public int id;
+    public String name;
+    public String[] genres;
+    public int tracks;
+    public int albums;
+    public String link;
+    public String description;
+    public Cover cover;
 
     public class Cover {
-        String small;
-        String big;
+        public String small;
+        public String big;
 
         public Cover(String small, String big) {
             this.small = small;
@@ -23,7 +23,8 @@ public class Artist {
         }
     }
 
-    public Artist(int id, String name, String[] genres, int tracks, int albums, String link, String description, String small, String big) {
+    public Artist(int id, String name, String[] genres, int tracks, int albums, String link,
+                  String description, String small, String big) {
         this.id = id;
         this.name = name;
         this.genres = genres;

@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@mipmap/ic_artist" />
+        android:scaleType="fitXY" />
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -26,9 +25,7 @@
 
         <TextView
             android:id="@+id/card_title"
-            style="@style/CardText"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            style="@style/CardTitle" />
 
         <TextView
             android:id="@+id/card_genres"
@@ -37,7 +34,7 @@
             android:layout_marginTop="5dp" />
 
         <TextView
-            android:id="@+id/card_songs"
+            android:id="@+id/card_tracks"
             style="@style/CardText"
             android:layout_below="@+id/card_genres"
             android:layout_marginTop="40dp" />
