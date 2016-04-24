@@ -1,10 +1,12 @@
 package com.application;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +27,8 @@ public class ArtistsList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artists_list);
-
-        initToobar();
         initAdapter();
         initRecycler();
-    }
-
-    private void initToobar() {
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.artist_list_toolbar);
-//        setSupportActionBar(toolbar);
     }
 
     private void initAdapter() {
@@ -49,10 +44,8 @@ public class ArtistsList extends AppCompatActivity {
 
     private void initRecycler() {
         mRecycler = (RecyclerView) findViewById(R.id.artist_list_recycler);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecycler.setLayoutManager(mLayoutManager);
         mRecycler.setAdapter(mAdapter);
+        mRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
     class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.ViewHolder> {
@@ -60,8 +53,6 @@ public class ArtistsList extends AppCompatActivity {
 
         public ArtistListAdapter(List<Artist> artists) {
             mArtists = artists;
-            Log.e(LOG_TAG, Integer.toString(mArtists.size()));
-            initRecycler();
         }
 
         @Override
@@ -72,19 +63,15 @@ public class ArtistsList extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            Log.e(LOG_TAG, Integer.toString(position) + " " + mArtists.get(position));
+        public void onBindViewHolder(final ViewHolder holder, int position) {
             Artist artist = mArtists.get(position);
+            String title = artist.name;
+            String genres = TextUtils.join(", ", artist.genres);
+            String songs = String.format("albums: %d    tracks: %d", artist.albums, artist.tracks);
             holder.mHolderArtist = artist;
-            holder.mTitle.setText(artist.name);
-            String genres = artist.genres[0];
-            for (int i = 1; i < artist.genres.length; i++) {
-                genres += ", " + artist.genres[i];
-            }
-            String songs = artist.tracks + " " + artist.albums;
+            holder.mTitle.setText(title);
             holder.mGenres.setText(genres);
             holder.mSongs.setText(songs);
-            Log.e(LOG_TAG, artist.name + " " + genres + " " + songs);
         }
 
         @Override
@@ -92,8 +79,7 @@ public class ArtistsList extends AppCompatActivity {
             return mArtists.size();
         }
 
-
-        class ViewHolder extends RecyclerView.ViewHolder { //implements View.OnClickListener {
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             Artist mHolderArtist;
             TextView mTitle;
@@ -103,21 +89,19 @@ public class ArtistsList extends AppCompatActivity {
 
             ViewHolder(View item) {
                 super(item);
-                setContentView(R.layout.artist_card);
-                mTitle = (TextView) findViewById(R.id.card_title);
-                mGenres = (TextView) findViewById(R.id.card_genres);
-                mSongs = (TextView) findViewById(R.id.card_songs);
-                mImageView = (ImageView) findViewById(R.id.artist_small_icon);
-//                item.setOnClickListener(this);
+                mTitle = (TextView) item.findViewById(R.id.card_title);
+                mGenres = (TextView) item.findViewById(R.id.card_genres);
+                mSongs = (TextView) item.findViewById(R.id.card_songs);
+                mImageView = (ImageView) item.findViewById(R.id.artist_small_icon);
+                item.setOnClickListener(this);
             }
 
-//            @Override
-//            public void onClick(View v) {
-//                Log.e(LOG_TAG, "On click called");
-//                Context context = itemView.getContext();
-//                Intent intent = new Intent(context, ArtistPage.class);
-//                context.startActivity(intent);
-//            }
+            @Override
+            public void onClick(View v) {
+                Context context = itemView.getContext();
+                Intent intent = new Intent(context, ArtistPage.class);
+                context.startActivity(intent);
+            }
         }
     }
 }
