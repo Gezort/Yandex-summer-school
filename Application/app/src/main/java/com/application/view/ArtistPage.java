@@ -1,4 +1,4 @@
-package com.application;
+package com.application.view;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.application.R;
 import com.squareup.picasso.Picasso;
 
 public class ArtistPage extends AppCompatActivity {

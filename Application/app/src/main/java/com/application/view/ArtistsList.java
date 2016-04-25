@@ -1,4 +1,4 @@
-package com.application;
+package com.application.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,22 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.application.R;
+import com.application.model.Artist;
+import com.application.presenter.ArtistsListPresenter;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class ArtistsList extends AppCompatActivity {
 
@@ -37,6 +29,7 @@ public class ArtistsList extends AppCompatActivity {
     private List<Artist> mArtists;
     private RecyclerView mRecycler;
     private View mProgress;
+    private ArtistsListPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,38 +37,24 @@ public class ArtistsList extends AppCompatActivity {
         setContentView(R.layout.activity_artists_list);
         mProgress = findViewById(R.id.download_progress);
         mArtists = new ArrayList<>();
+        mPresenter = new ArtistsListPresenter(this);
         initToolbar();
-        downloadData();
-    }
-
-    private void downloadData() {
-        mProgress.setVisibility(View.VISIBLE);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://download.cdn.yandex.net/")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        IJSONLoader loader = retrofit.create(IJSONLoader.class);
-        Observable<Artist[]> observable = loader.getJSON();
-        observable.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .flatMap(artists -> Observable.from(artists))
-                .subscribe(mOnNext, mOnError, onComplete);
-    }
-
-    private Action1<Throwable> mOnError = (exception) -> {
-        Toast.makeText(getApplicationContext(), "Error: can't download data", Toast.LENGTH_LONG);
-    };
-
-    private Action1<Artist> mOnNext = (artist) -> {
-        mArtists.add(artist);
-    };
-
-    private Action0 onComplete = () -> {
-        mProgress.setVisibility(View.GONE);
+        mPresenter.downloadData();
         mAdapter = new ArtistListAdapter(mArtists);
         initRecycler();
-    };
+    }
+
+    public List<Artist> getArtists() {
+        return mArtists;
+    }
+
+    public void showProgress() {
+        mProgress.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        mProgress.setVisibility(View.GONE);
+    }
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.artist_list_toolbar);
@@ -107,14 +86,14 @@ public class ArtistsList extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             Artist artist = mArtists.get(position);
-            String title = artist.name;
-            String genres = TextUtils.join(", ", artist.genres);
-            String songs = String.format("%d albums, %d tracks", artist.albums, artist.tracks);
+            String title = artist.getName();
+            String genres = TextUtils.join(", ", artist.getGenres());
+            String songs = String.format("%d albums, %d tracks", artist.getAlbums(), artist.getTracks());
             holder.mHolderArtist = artist;
             holder.mName.setText(title);
             holder.mGenres.setText(genres);
             holder.mSongs.setText(songs);
-            holder.downloadImage();
+            mPresenter.downloadImage(artist.getId(), holder.mImageView, artist.getBigIconUrl());
         }
 
         @Override
@@ -145,21 +124,15 @@ public class ArtistsList extends AppCompatActivity {
                 item.setOnClickListener(this);
             }
 
-            void downloadImage() {
-                Picasso.with(getApplicationContext())
-                        .load(mHolderArtist.cover.small)
-                        .into(mImageView);
-            }
-
             @Override
             public void onClick(View v) {
                 Context context = itemView.getContext();
                 Intent intent = new Intent(context, ArtistPage.class);
-                intent.putExtra(NAME, mHolderArtist.name);
-                intent.putExtra(TRACKS, String.format("albums: %d   tracks: %d", mHolderArtist.albums, mHolderArtist.tracks));
-                intent.putExtra(GENRES, TextUtils.join(", ", mHolderArtist.genres));
-                intent.putExtra(BIO, mHolderArtist.description);
-                intent.putExtra(ICON_URL, mHolderArtist.cover.big);
+                intent.putExtra(NAME, mHolderArtist.getName());
+                intent.putExtra(TRACKS, String.format("albums: %d   tracks: %d", mHolderArtist.getAlbums(), mHolderArtist.getTracks()));
+                intent.putExtra(GENRES, TextUtils.join(", ", mHolderArtist.getGenres()));
+                intent.putExtra(BIO, mHolderArtist.getBiography());
+                intent.putExtra(ICON_URL, mHolderArtist.getBigIconUrl());
                 context.startActivity(intent);
             }
         }

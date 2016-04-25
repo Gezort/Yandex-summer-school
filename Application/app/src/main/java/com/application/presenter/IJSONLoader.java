@@ -1,4 +1,6 @@
-package com.application;
+package com.application.presenter;
+
+import com.application.model.Artist;
 
 import retrofit2.http.GET;
 import rx.Observable;
